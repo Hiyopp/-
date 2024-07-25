@@ -18,6 +18,7 @@ i18next
     lng: "ko-KR",
     fallbackLng: {
       "en-US": ["en-US"],
+      en: ["en-US"],
       default: ["ko-KR"],
     },
     interpolation: {
