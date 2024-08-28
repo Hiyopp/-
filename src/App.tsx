@@ -2,7 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 
 import { HomePage } from "./pages/HomePage";
+import { JoinPage } from "./pages/joinPage/JoinPage";
 import { LoginPage } from "./pages/LoginPage";
+import { PayloadProvider } from "./pages/PayloadContext";
 
 const GlobalStyle = styled.div`
   width: 100vw;
@@ -11,12 +13,15 @@ const GlobalStyle = styled.div`
 
 function App() {
   return (
-    <GlobalStyle>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/loginPage" element={<LoginPage />} />
-      </Routes>
-    </GlobalStyle>
+    <PayloadProvider>
+      <GlobalStyle>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/join" element={<JoinPage />} />
+        </Routes>
+      </GlobalStyle>
+    </PayloadProvider>
   );
 }
 
