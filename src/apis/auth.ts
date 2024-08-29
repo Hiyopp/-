@@ -7,8 +7,17 @@ type joinPayloadType = {
   reCheckPw: string | undefined;
 };
 
-export const postLogin = (joinPayload: joinPayloadType) => {
+type loginPayloadType = {
+  email: string | undefined;
+  password: string | undefined;
+};
+
+export const postJoin = (joinPayload: joinPayloadType) => {
   const { nickname, email, password } = joinPayload;
   const payload = { nickname: nickname, email: email, password: password };
   return api.post(`/auth/register`, payload);
+};
+
+export const postLogin = (loginPayload: loginPayloadType) => {
+  return api.post(`/auth/login`, loginPayload);
 };

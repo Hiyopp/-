@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { HomePage } from "./pages/HomePage";
 import { JoinPage } from "./pages/joinPage/JoinPage";
-import { LoginPage } from "./pages/LoginPage";
+import { LoginPage } from "./pages/LoginPage/LoginPage";
 import { PayloadProvider } from "./pages/PayloadContext";
 
 const GlobalStyle = styled.div`

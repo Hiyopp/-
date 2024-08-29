@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import { usePayload } from "./PayloadContext";
+import { usePayload } from "../PayloadContext";
+import { isLoginValid } from "./IsLoginValid";
 
 const HomeWrapper = styled.div`
   width: 100%;
@@ -80,7 +81,7 @@ const SubmitButton = styled.button`
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { loginPayload } = usePayload();
+  const { loginPayload, loginMutate } = usePayload();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "email") loginPayload.email = e.target.value;
@@ -90,7 +91,17 @@ export function LoginPage() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter")
-      console.log(loginPayload.email, loginPayload.password);
+      if (isLoginValid(loginPayload)) {
+        loginMutate.mutate();
+        console.log(loginMutate);
+      }
+  };
+
+  const clickLogin = () => {
+    if (isLoginValid(loginPayload)) {
+      loginMutate.mutate();
+      console.log(loginMutate);
+    }
   };
 
   const toJoinPage = () => {
@@ -116,7 +127,7 @@ export function LoginPage() {
           name="password"
         />
         <SubmitWrapper>
-          <SubmitButton>로그인</SubmitButton>
+          <SubmitButton onClick={clickLogin}>로그인</SubmitButton>
           <SubmitButton onClick={toJoinPage}>회원가입</SubmitButton>
         </SubmitWrapper>
       </InputBox>

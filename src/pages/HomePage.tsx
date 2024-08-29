@@ -4,5 +4,9 @@ import styled from "styled-components";
 export function HomePage() {
   const navigate = useNavigate();
 
-  return <div>home</div>;
+  const test = () => {
+    console.log(localStorage.getItem("test"));
+  }
+
+  return <button onClick={test}>home</button>;
 }

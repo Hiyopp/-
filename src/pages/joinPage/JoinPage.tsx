@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { usePayload } from "../PayloadContext";
 import { InputBar } from "./InputBar";
-import isJoinValid from "./IsJoinValid";
+import { isJoinValid } from "./IsJoinValid";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -69,7 +69,7 @@ export function JoinPage() {
   const { joinPayload, joinMutate } = usePayload();
 
   const clickJoin = () => {
-    isJoinValid(joinPayload, joinMutate);
+    if (isJoinValid(joinPayload)) joinMutate.mutate();
   };
 
   return (

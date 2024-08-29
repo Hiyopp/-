@@ -1,5 +1,3 @@
-import { UseMutationResult } from "@tanstack/react-query";
-
 type joinPayloadType = {
   nickname: string | undefined;
   email: string | undefined;
@@ -7,10 +5,7 @@ type joinPayloadType = {
   reCheckPw: string | undefined;
 };
 
-function isJoinValid(
-  joinPayload: joinPayloadType,
-  joinMutate: UseMutationResult<unknown, unknown, void, unknown>,
-) {
+export function isJoinValid(joinPayload: joinPayloadType) {
   const { nickname, email, password, reCheckPw } = joinPayload;
 
   if (!nickname && !email && !password && !reCheckPw)
@@ -20,11 +15,10 @@ function isJoinValid(
   else if (!password) alert("비밀번호를 입력해주세요");
   else if (!reCheckPw) alert("비밀번호를 재확인해주세요");
   else if (password !== reCheckPw) alert("비밀번호 재확인이 되지 않았습니다.");
-  else if (email && password === reCheckPw) {
+  if (email && password === reCheckPw) {
     joinPayload.email = email;
     joinPayload.password = password;
-    joinMutate.mutate();
+    return true;
   }
+  return false;
 }
-
-export default isJoinValid;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { usePayload } from "../PayloadContext";
-import isJoinValid from "./IsJoinValid";
+import { isJoinValid } from "./IsJoinValid";
 
 const InputWrapper = styled.div`
   width: 90%;
@@ -41,7 +41,7 @@ export function InputBar({ content }: { content: string }) {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      isJoinValid(joinPayload, joinMutate);
+      if (isJoinValid(joinPayload)) joinMutate.mutate();
     }
   };
 
