@@ -5,6 +5,7 @@ import { HomePage } from "./pages/HomePage";
 import { JoinPage } from "./pages/joinPage/JoinPage";
 import { LoginPage } from "./pages/LoginPage/LoginPage";
 import { PayloadProvider } from "./pages/PayloadContext";
+import { PostPage } from "./pages/PostPage";
 
 const GlobalStyle = styled.div`
   width: 100vw;
@@ -17,6 +18,7 @@ function App() {
       <GlobalStyle>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/post" element={<PostPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/join" element={<JoinPage />} />
         </Routes>

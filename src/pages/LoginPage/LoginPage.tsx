@@ -61,17 +61,9 @@ const SubmitWrapper = styled.div`
 const SubmitButton = styled.button`
   padding: 10px;
   width: 110px;
-  background: white;
 
   font-weight: bold;
   font-size: 20px;
-  font-family: "Ownglyph_meetme-Rg";
-
-  border: none;
-  cursor: pointer;
-  &:focus {
-    outline: none;
-  }
 
   transition: transform 0.1s ease-in-out;
   &:hover {
@@ -93,19 +85,13 @@ export function LoginPage() {
     if (e.key === "Enter")
       if (isLoginValid(loginPayload)) {
         loginMutate.mutate();
-        console.log(loginMutate);
       }
   };
 
   const clickLogin = () => {
     if (isLoginValid(loginPayload)) {
       loginMutate.mutate();
-      console.log(loginMutate);
     }
-  };
-
-  const toJoinPage = () => {
-    navigate("/join");
   };
 
   return (
@@ -128,7 +114,9 @@ export function LoginPage() {
         />
         <SubmitWrapper>
           <SubmitButton onClick={clickLogin}>로그인</SubmitButton>
-          <SubmitButton onClick={toJoinPage}>회원가입</SubmitButton>
+          <SubmitButton onClick={() => navigate("/join")}>
+            회원가입
+          </SubmitButton>
         </SubmitWrapper>
       </InputBox>
     </HomeWrapper>
