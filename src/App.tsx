@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 
-import { HomePage } from "./pages/HomePage";
+import { HomePage } from "./pages/homePage/HomePage";
 import { JoinPage } from "./pages/joinPage/JoinPage";
 import { LoginPage } from "./pages/LoginPage/LoginPage";
 import { PayloadProvider } from "./pages/PayloadContext";

@@ -1,6 +1,7 @@
+import { useMutation } from "@tanstack/react-query";
+import { postJoin } from "src/apis/auth";
 import styled from "styled-components";
 
-import { usePayload } from "../PayloadContext";
 import { InputBar } from "./InputBar";
 import { isJoinValid } from "./IsJoinValid";
 
@@ -65,8 +66,32 @@ const SubmitButton = styled.button`
   }
 `;
 
+type joinPayloadType = {
+  nickname: string | undefined;
+  email: string | undefined;
+  password: string | undefined;
+  reCheckPw: string | undefined;
+};
+
 export function JoinPage() {
-  const { joinPayload, joinMutate } = usePayload();
+  const joinPayload: joinPayloadType = {
+    nickname: undefined,
+    email: undefined,
+    password: undefined,
+    reCheckPw: undefined,
+  };
+  const joinMutate = useMutation({
+    mutationFn: () => postJoin(joinPayload),
+
+    onSuccess: () => {
+      alert("성공적으로 가입되었습니다.");
+
+      window.location.replace("/login");
+    },
+    onError: (error: unknown) => {
+      alert(`가입에 실패했습니다. ${error}`);
+    },
+  });
 
   const clickJoin = () => {
     if (isJoinValid(joinPayload)) joinMutate.mutate();
