@@ -10,16 +10,22 @@
     "lint": "eslint src/"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.52.2",
+    "@types/react-router-dom": "^5.3.3",
+    "axios": "^1.7.5",
+    "http-proxy-middleware": "^3.0.0",
     "i18next": "^23.7.16",
     "i18next-browser-languagedetector": "^7.2.0",
     "prettier": "^3.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^14.0.0",
+    "react-router-dom": "^6.26.1",
     "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.2",
+    "@types/jquery": "^3.5.30",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
@@ -38,5 +44,6 @@
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^4.3.1"
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.3.1",
+  "proxy": "https://api.2024.newbies.gistory.me"
 }
