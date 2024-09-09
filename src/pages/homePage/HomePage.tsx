@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getBoardInfo } from "src/apis/posts";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { getBoardInfo, getPostInfo } from "src/apis/posts";
 import styled from "styled-components";
 
 import BackImg from "../../../public/imgs/background-picture.svg";
@@ -14,6 +14,7 @@ import { fadeIn, fadeOut, fire, rotation, smoke } from "../Keyframes";
 import {
   CHANGE_DOWN_PAGE,
   CHANGE_UP_PAGE,
+  DETAIL,
   SCROLL_DOWN_CHANGE,
   SCROLL_UP_CHANGE,
 } from "./HomePage.const";
@@ -28,6 +29,7 @@ const WholeWrap = styled.div`
 const BackgroundImg = styled.div.attrs<{
   $path: string;
   $widthSize: number | undefined;
+  $isTitleClicked: boolean;
 }>((props) => ({
   style: {
     width: `${props.$widthSize}px`,
@@ -41,7 +43,10 @@ const BackgroundImg = styled.div.attrs<{
   background-size: 100% 100%;
   background-repeat: no-repeat;
   position: relative;
-  //transform: scale(5) translateY(30%) translateX(-9%);
+
+  transition: transform 1s ease-in-out;
+  transform: ${(props) =>
+    props.$isTitleClicked && "scale(5) translateY(30%) translateX(-9%)"};
 `;
 
 const NavigationBarWrap = styled.div`
@@ -121,7 +126,7 @@ const MessageSize = styled.div`
   height: 1000px;
 `;
 
-const MessageContent = styled.div`
+const MessageContentWrap = styled.div`
   width: 80%;
   height: 65%;
   position: absolute;
@@ -131,9 +136,18 @@ const MessageContent = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const MessageContent = styled.div`
   word-break: break-all;
 
+  cursor: pointer;
+  transition: font-size 0.1s ease-in-out;
+  &:hover {
+    font-size: 115%;
+  }
   font-weight: 600;
+  z-index: 10;
 `;
 
 const MessageBoxImg = styled.img.attrs<{ $sizeNumber: number; $page: number }>(
@@ -169,6 +183,7 @@ const MessageCircleImg = styled.img.attrs<{
 `;
 
 let scrollDirection = 0;
+let introduce = true;
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -181,15 +196,24 @@ export function HomePage() {
   });
   const scroll = document.getElementById("MessageScrollId");
 
+  const [isTitleClicked, setIsTitleClicked] = useState(false);
+  const [postParams, setPostParams] = useSearchParams();
+  const query = postParams.get("mode") ?? "";
+
   const { isLoading: isBoardLoading, data: boardData } = useQuery({
     queryKey: [`getBoards`],
     queryFn: () => getBoardInfo(),
     retry: 0,
   });
 
-  const boards = boardData?.data.list;
+  const { isLoading: isPostsLoading, data: postsData } = useQuery({
+    queryKey: [`getPosts`],
+    queryFn: () => getPostInfo(),
+    retry: 0,
+  });
 
-  !isBoardLoading && console.log(boards);
+  const boards = boardData?.data.list;
+  const posts = postsData?.data.list;
 
   useEffect(() => {
     window.addEventListener("resize", () => setWidth(window.innerWidth)); //화면의 width 설정
@@ -203,80 +227,120 @@ export function HomePage() {
     };
   }, [scroll]);
 
+  useEffect(() => {
+    if (introduce) {
+      setTimeout(
+        //사람 보인 후 alert하도록
+        () =>
+          alert(
+            "사람 머리 윗부분을 드레그하여 board를 보세요, \n그리고 보드를 클릭하여 내용을 확인하세요!",
+          ),
+        10,
+      );
+      introduce = false;
+    }
+  }, []);
+
   const constantOfEachCircle = () => {
     const constant = 0.05;
     const _boxScrollAmout = boxScrollAmout;
-    if (
-      boxScrollAmout[0] >= CHANGE_UP_PAGE &&
-      !isScrollChanged.up &&
-      scrollDirection > 0
-    ) {
-      //위로 스크롤할 때 페이지 변경
-      setMessagePage(messagePage + 1);
-      setIsScrollChanged({ ...isScrollChanged, up: true });
-    }
-    if (boxScrollAmout[0] >= SCROLL_UP_CHANGE && scrollDirection > 0) {
-      //위로 스크롤할 때 스크롤 이전으로 이동(무한 로딩)
-      scroll?.scrollTo(0, 18 / constant);
-      setIsScrollChanged({ ...isScrollChanged, up: false });
-    }
-    if (
-      boxScrollAmout[0] <= CHANGE_DOWN_PAGE &&
-      !isScrollChanged.down &&
-      scrollDirection < 0 &&
-      messagePage !== 0
-    ) {
-      //아래로 스크롤할 때 페이지 변경
-      setMessagePage(messagePage - 1);
-      setIsScrollChanged({ ...isScrollChanged, down: true });
-    }
+    if (!isBoardLoading && boards) {
+      if (messagePage === boards.length && scrollDirection > 0) {
+        scroll?.scrollTo(0, 25.9 / constant);
+      } else {
+        if (
+          boxScrollAmout[0] >= CHANGE_UP_PAGE &&
+          !isScrollChanged.up &&
+          scrollDirection > 0
+        ) {
+          //위로 스크롤할 때 페이지 변경
+          setMessagePage(messagePage + 1);
+          setIsScrollChanged({ ...isScrollChanged, up: true });
+        }
+        if (boxScrollAmout[0] >= SCROLL_UP_CHANGE && scrollDirection > 0) {
+          //위로 스크롤할 때 스크롤 이전으로 이동(무한 로딩)
+          scroll?.scrollTo(0, 18 / constant);
+          setIsScrollChanged({ ...isScrollChanged, up: false });
+        }
+        if (
+          boxScrollAmout[0] <= CHANGE_DOWN_PAGE &&
+          !isScrollChanged.down &&
+          scrollDirection < 0 &&
+          messagePage !== 0
+        ) {
+          //아래로 스크롤할 때 페이지 변경
+          setMessagePage(messagePage - 1);
+          setIsScrollChanged({ ...isScrollChanged, down: true });
+        }
 
-    if (
-      boxScrollAmout[0] <= SCROLL_DOWN_CHANGE &&
-      scrollDirection < 0 &&
-      messagePage !== 0
-    ) {
-      //아래로 스크롤할 때 스크롤 이전으로 이동(무한 로딩)
-      scroll?.scrollTo(0, 28 / constant);
-      setIsScrollChanged({ ...isScrollChanged, down: false });
-    }
-    if (scroll) {
-      boxScrollAmout.map((circles, index) => {
-        _boxScrollAmout[index] = scroll.scrollTop * constant - index * 10;
-        if (_boxScrollAmout[index] < 0) _boxScrollAmout[index] = 0;
-      });
+        if (
+          boxScrollAmout[0] <= SCROLL_DOWN_CHANGE &&
+          scrollDirection < 0 &&
+          messagePage !== 0
+        ) {
+          //아래로 스크롤할 때 스크롤 이전으로 이동(무한 로딩)
+          scroll?.scrollTo(0, 28 / constant);
+          setIsScrollChanged({ ...isScrollChanged, down: false });
+        }
+      }
+      if (scroll) {
+        boxScrollAmout.map((circles, index) => {
+          _boxScrollAmout[index] = scroll.scrollTop * constant - index * 10;
+          if (_boxScrollAmout[index] < 0) _boxScrollAmout[index] = 0;
+        });
+      }
     }
 
     setBoxScrollAmout([..._boxScrollAmout]);
   };
 
+  const clickTitle = () => {
+    setIsTitleClicked(true);
+    postParams.set("mode", DETAIL);
+    setPostParams(postParams);
+  };
+
+  useEffect(() => {
+    query !== DETAIL && (setPostParams(), setIsTitleClicked(false));
+  }, [query, setPostParams]);
+
   return (
     <WholeWrap>
-      <BackgroundImg $path={BackImg} $widthSize={width}>
+      <BackgroundImg
+        $path={BackImg}
+        $widthSize={width}
+        $isTitleClicked={isTitleClicked}
+      >
         <PersonImg src={Person} />
         <FireImg src={Fire} />
         <SmokeImg src={Smoke} />
-        <MessageScrollWrap>
-          <MessageBoxImg
-            src={MessageBox}
-            $sizeNumber={boxScrollAmout[0]}
-            $page={messagePage}
-          />
-          {boxScrollAmout.map((circles, index) => (
-            <MessageCircleImg
-              key={index}
-              src={MessageCircle}
-              $sizeNumber={circles}
-              $isUp={scrollDirection > 0}
+        {!isBoardLoading && (
+          <MessageScrollWrap>
+            <MessageBoxImg
+              src={MessageBox}
+              $sizeNumber={boxScrollAmout[0]}
+              $page={messagePage}
             />
-          ))}
-          {!isBoardLoading && messagePage - 1 >= 0 && (
-            <MessageContent>{boards[messagePage - 1].title}</MessageContent>
-          )}
-          <MessageScroll id="MessageScrollId" onScroll={constantOfEachCircle}>
-            <MessageSize />
-          </MessageScroll>
-        </MessageScrollWrap>
+            {boxScrollAmout.map((circles, index) => (
+              <MessageCircleImg
+                key={index}
+                src={MessageCircle}
+                $sizeNumber={circles}
+                $isUp={scrollDirection > 0}
+              />
+            ))}
+            {messagePage - 1 >= 0 && (
+              <MessageContentWrap>
+                <MessageContent onClick={clickTitle}>
+                  {boards[messagePage - 1].title}
+                </MessageContent>
+              </MessageContentWrap>
+            )}
+            <MessageScroll id="MessageScrollId" onScroll={constantOfEachCircle}>
+              <MessageSize />
+            </MessageScroll>
+          </MessageScrollWrap>
+        )}
       </BackgroundImg>
       <NavigationBarWrap>
         <NavigationButton onClick={() => navigate("/login")}>

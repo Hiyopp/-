@@ -9,6 +9,13 @@ const api: AxiosInstance = axios.create({
   baseURL: "/local",
 });
 
+export const noInterceptorsApi: AxiosInstance = axios.create({
+  headers: {
+    "Content-Type": "application/json",
+  },
+  baseURL: "/local",
+});
+
 const TOKEN_KEY = "accessToken";
 const REFRESH_KEY = "refreshToken";
 
@@ -46,9 +53,7 @@ api.interceptors.response.use(
           // (??) -> 원인 파악 불가, 에러 처리
           alert("네트워크 오류");
         } else {
-          const refreshTokenResponse = await tryRefreshToken({
-            refreshToken,
-          });
+          const refreshTokenResponse = await tryRefreshToken(refreshToken);
           localStorage.setItem(
             "accessToken",
             refreshTokenResponse.data.accessToken,

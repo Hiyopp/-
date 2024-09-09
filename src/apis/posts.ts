@@ -1,5 +1,10 @@
-import api from "./api";
+import { noInterceptorsApi } from "./api";
 
 export const getBoardInfo = () => {
-  return api.get(`/boards`);
+  return noInterceptorsApi.get(`/boards`);
+};
+
+export const getPostInfo = (boardId?: string) => {
+  const payload = { boardUuid: boardId };
+  return noInterceptorsApi.get(`/posts`, { params: payload });
 };
