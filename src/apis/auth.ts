@@ -21,3 +21,7 @@ export const postJoin = (joinPayload: joinPayloadType) => {
 export const postLogin = (loginPayload: loginPayloadType) => {
   return api.post(`/auth/login`, loginPayload);
 };
+
+export const tryRefreshToken = (payload: { refreshToken: string }) => {
+  return api.post(`/auth/refresh`, payload);
+};
