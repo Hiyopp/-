@@ -1,5 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getBoardInfo } from "src/apis/posts";
 import styled from "styled-components";
 
 import BackImg from "../../../public/imgs/background-picture.svg";
@@ -119,6 +121,21 @@ const MessageSize = styled.div`
   height: 1000px;
 `;
 
+const MessageContent = styled.div`
+  width: 80%;
+  height: 65%;
+  position: absolute;
+
+  top: 10%;
+  right: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  word-break: break-all;
+
+  font-weight: 600;
+`;
+
 const MessageBoxImg = styled.img.attrs<{ $sizeNumber: number; $page: number }>(
   () => ({}),
 )`
@@ -163,6 +180,16 @@ export function HomePage() {
     down: false,
   });
   const scroll = document.getElementById("MessageScrollId");
+
+  const { isLoading: isBoardLoading, data: boardData } = useQuery({
+    queryKey: [`getBoards`],
+    queryFn: () => getBoardInfo(),
+    retry: 0,
+  });
+
+  const boards = boardData?.data.list;
+
+  !isBoardLoading && console.log(boards);
 
   useEffect(() => {
     window.addEventListener("resize", () => setWidth(window.innerWidth)); //화면의 width 설정
@@ -243,6 +270,9 @@ export function HomePage() {
               $isUp={scrollDirection > 0}
             />
           ))}
+          {!isBoardLoading && messagePage - 1 >= 0 && (
+            <MessageContent>{boards[messagePage - 1].title}</MessageContent>
+          )}
           <MessageScroll id="MessageScrollId" onScroll={constantOfEachCircle}>
             <MessageSize />
           </MessageScroll>
