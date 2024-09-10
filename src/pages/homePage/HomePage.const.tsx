@@ -4,4 +4,4 @@ export const SCROLL_UP_CHANGE = 28;
 export const SCROLL_DOWN_CHANGE = 18;
 
 export const DETAIL = "detail";
-export const HOME = "home";
+export const HOME = "";
