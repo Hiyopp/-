@@ -19,7 +19,7 @@ export const postJoin = (joinPayload: joinPayloadType) => {
 };
 
 export const postLogin = (loginPayload: loginPayloadType) => {
-  return api.post(`/auth/login`, loginPayload);
+  return noInterceptorsApi.post(`/auth/login`, loginPayload);
 };
 
 export const tryRefreshToken = (refreshValue: string) => {

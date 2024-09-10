@@ -63,7 +63,7 @@ const NavigationBarWrap = styled.div`
 
 const NavigationButton = styled.button`
   font-size: 30px;
-  margin-right: 30px;
+  margin-right: 20px;
   &:last-child {
     margin-right: 0;
   }
@@ -369,6 +369,13 @@ export function HomePage() {
     setIsTitleClicked(false);
   };
 
+  const clickLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("expiresIn");
+    alert("로그아웃 되었습니다");
+  };
+
   useEffect(() => {
     query !== DETAIL && (setPostParams(), setIsTitleClicked(false));
   }, [query, setPostParams]);
@@ -451,6 +458,7 @@ export function HomePage() {
         <NavigationButton onClick={() => navigate("/post")}>
           포스트
         </NavigationButton>
+        <NavigationButton onClick={clickLogout}>로그아웃</NavigationButton>
       </NavigationBarWrap>
     </WholeWrap>
   );

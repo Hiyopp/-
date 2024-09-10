@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getBoardInfo, postBoard, postPost } from "src/apis/posts";
+import { getLoginedBoardInfo, postBoard, postPost } from "src/apis/posts";
 import styled from "styled-components";
 
 const WholeWrap = styled.div`
@@ -118,7 +118,7 @@ export function PostPage() {
 
   const { isLoading: isBoardLoading, data: boardData } = useQuery({
     queryKey: [`getBoards`],
-    queryFn: () => getBoardInfo(),
+    queryFn: () => getLoginedBoardInfo(),
     retry: 0,
   });
 

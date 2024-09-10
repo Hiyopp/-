@@ -9,6 +9,7 @@ const HomeWrapper = styled.div`
   height: 100%;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
@@ -55,15 +56,30 @@ const SubmitWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
 `;
 
 const SubmitButton = styled.button`
-  padding: 10px;
-  width: 110px;
+  width: 90px;
 
   font-weight: bold;
   font-size: 20px;
+  cursor: pointer;
+
+  transition: transform 0.1s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const StyledButton = styled.button`
+  width: 90px;
+  margin-bottom: 30px;
+
+  position: absolute;
+  bottom: 0;
+
+  font-weight: bold;
+  font-size: 30px;
   cursor: pointer;
 
   transition: transform 0.1s ease-in-out;
@@ -95,15 +111,9 @@ export function LoginPage() {
     }
   };
 
-  const clickLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("expiresIn");
-    alert("로그아웃 되었습니다");
-  };
-
   return (
     <HomeWrapper>
+      <StyledButton onClick={() => navigate("/")}>{"홈으로"}</StyledButton>
       <InputBox>
         <Title>Postry</Title>
         <StyledInput
@@ -122,7 +132,6 @@ export function LoginPage() {
         />
         <SubmitWrapper>
           <SubmitButton onClick={clickLogin}>로그인</SubmitButton>
-          <SubmitButton onClick={clickLogout}>로그아웃</SubmitButton>
           <SubmitButton onClick={() => navigate("/join")}>
             회원가입
           </SubmitButton>

@@ -51,7 +51,8 @@ api.interceptors.response.use(
         if (!accessToken || !refreshToken) {
           // 로컬의 accessToken을 사용해서 요청을 보냈지만, 로컬스토리지에 accessToken이나 refreshToken이 없는 경우
           // (??) -> 원인 파악 불가, 에러 처리
-          alert("네트워크 오류");
+          alert("로그인이 필요한 서비스입니다.");
+          window.location.replace("/login");
         } else {
           const refreshTokenResponse = await tryRefreshToken(refreshToken);
           localStorage.setItem(
