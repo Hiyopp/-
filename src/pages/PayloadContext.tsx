@@ -1,7 +1,14 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { AxiosResponse, isAxiosError } from "axios";
 import { createContext, ReactNode, useContext } from "react";
-import { postLogin } from "src/apis/auth";
+import { postJoin, postLogin } from "src/apis/auth";
+
+type joinPayloadType = {
+  nickname: string | undefined;
+  email: string | undefined;
+  password: string | undefined;
+  reCheckPw: string | undefined;
+};
 
 type loginPayloadType = {
   email: string | undefined;
@@ -9,6 +16,8 @@ type loginPayloadType = {
 };
 
 type PayloadContextType = {
+  joinPayload: joinPayloadType;
+  joinMutate: UseMutationResult<unknown, unknown, void, unknown>;
   loginPayload: loginPayloadType;
   loginMutate: UseMutationResult<
     AxiosResponse<any, any>,
@@ -29,6 +38,28 @@ export const usePayload = (): PayloadContextType => {
 };
 
 export const PayloadProvider = ({ children }: { children: ReactNode }) => {
+  const joinPayload: joinPayloadType = {
+    nickname: undefined,
+    email: undefined,
+    password: undefined,
+    reCheckPw: undefined,
+  };
+  const joinMutate = useMutation({
+    mutationFn: () => postJoin(joinPayload),
+
+    onSuccess: () => {
+      alert("성공적으로 가입되었습니다.");
+
+      window.location.replace("/login");
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        alert(
+          `가입에 실패했습니다. ${error.status} ${error.response?.statusText}`,
+        );
+      }
+    },
+  });
   const loginPayload: loginPayloadType = {
     email: undefined,
     password: undefined,
@@ -46,12 +77,9 @@ export const PayloadProvider = ({ children }: { children: ReactNode }) => {
     },
     onError: (error: unknown) => {
       if (isAxiosError(error)) {
-        const errorMessage = error.response?.data.error;
-        if (errorMessage === "Not Found") {
-          alert(`유저 정보가 없습니다. ${errorMessage}`);
-        } else {
-          alert(`가입에 실패했습니다. ${errorMessage}`);
-        }
+        alert(
+          `가입에 실패했습니다. ${error.status} ${error.response?.statusText}`,
+        );
       }
     },
   });
@@ -59,6 +87,8 @@ export const PayloadProvider = ({ children }: { children: ReactNode }) => {
   return (
     <PayloadContext.Provider
       value={{
+        joinPayload,
+        joinMutate,
         loginPayload,
         loginMutate,
       }}

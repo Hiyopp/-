@@ -1,4 +1,4 @@
-import api from "./api";
+import api, { noInterceptorsApi } from "./api";
 
 type joinPayloadType = {
   nickname: string | undefined;
@@ -20,4 +20,9 @@ export const postJoin = (joinPayload: joinPayloadType) => {
 
 export const postLogin = (loginPayload: loginPayloadType) => {
   return api.post(`/auth/login`, loginPayload);
+};
+
+export const tryRefreshToken = (refreshValue: string) => {
+  const payload = { refreshToken: refreshValue };
+  return noInterceptorsApi.post(`/auth/refresh`, payload);
 };
