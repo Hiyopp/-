@@ -95,6 +95,13 @@ export function LoginPage() {
     }
   };
 
+  const clickLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("expiresIn");
+    alert("로그아웃 되었습니다");
+  };
+
   return (
     <HomeWrapper>
       <InputBox>
@@ -115,6 +122,7 @@ export function LoginPage() {
         />
         <SubmitWrapper>
           <SubmitButton onClick={clickLogin}>로그인</SubmitButton>
+          <SubmitButton onClick={clickLogout}>로그아웃</SubmitButton>
           <SubmitButton onClick={() => navigate("/join")}>
             회원가입
           </SubmitButton>
